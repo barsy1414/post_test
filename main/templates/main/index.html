@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>POSTリクエストのテスト</title>
+</head>
+<body>
+    <p>テキストをPOSTで送信</p>
+    <form action="{% url 'text' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="text">
+        <input type="submit" value="送信">
+    </form>
+</body>
+</html>
