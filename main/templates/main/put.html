@@ -2,10 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>JavaScriptでテキストをPOST送信</title>
+    <title>PUTを送信してみる</title>
 </head>
 <body>
-    <h1>JavaScriptでテキストをPOST送信</h1>
+    <h1>PUTを送信してみる</h1>
+    <p>開発者ツールのResponseの中身を確認する</p>
+    <p>&lt;td2&gt;にテキストフォームの値が返ってきている（63行目）</p>
 </body>
 <script>
     window.addEventListener('load', init);
@@ -14,7 +16,8 @@
     function init() {
         createForm();
         createTable();
-        createAnchor();  
+        createAnchor();
+        createEvent(); 
     }
 
     //formを動的に生成
@@ -25,15 +28,16 @@
         var csrf = document.createElement('input');
 
         form.method = 'POST';
-        form.action = "{% url 'jstext' %}";
+        form.action = "{% url 'put' %}";
         form.id = 'form';
     
         inputText.type = 'text';
-        inputText.name = 'js_text';
+        inputText.name = 'put_text';
+        inputText.id = 'put_text';
 
         button.type = 'button';
         button.id = 'btn';
-        button.innerHTML = 'JavaScriptでPOST送信';
+        button.innerHTML = 'PUTリクエスト';
 
         csrf.type = 'hidden';
         csrf.name = 'csrfmiddlewaretoken';
@@ -44,8 +48,7 @@
         form.appendChild(button);
         document.body.appendChild(form);
 
-        //イベントを作成
-        createEvent(form);
+        
     }
 
     //Tableを動的に生成
@@ -55,8 +58,8 @@
         var td1 = document.createElement('td');
         var td2 = document.createElement('td');
 
-        td1.innerHTML = 'POST送信されたメッセージ';
-        td2.innerHTML = '{{ js_text | safe }}';
+        td1.innerHTML = 'PUT送信されたメッセージ';
+        td2.innerHTML = '{{ put_text | safe }}';
 
         tr.appendChild(td1);
         tr.appendChild(td2);
@@ -72,11 +75,37 @@
         document.body.appendChild(anchor);
     }
 
+    
+
     //イベント作成
-    function createEvent(form){
+    function createEvent(){
         const btn = document.querySelector('button');
         btn.addEventListener('click', function(){
-            form.submit();
+
+            //cookieを解析（コピペ）
+            function parse_cookies() {
+                var cookies = {};
+                if (document.cookie && document.cookie !== '') {
+                    document.cookie.split(';').forEach(function (c) {
+                        var m = c.trim().match(/(\w+)=(.*)/);
+                        if(m !== undefined) {
+                            cookies[m[1]] = decodeURIComponent(m[2]);
+                        }
+                    });
+                }
+                return cookies;
+            }
+
+            var cookies = parse_cookies(); 
+            console.log(cookies);
+
+            var xhr = new XMLHttpRequest();
+
+            put_text = document.getElementById('put_text').value;
+            
+            xhr.open('PUT', "{% url 'put' %}");
+            xhr.setRequestHeader('X-CSRFToken', cookies['csrftoken']);
+            xhr.send(put_text);
         })
     }
 </script>

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, QueryDict
+from django.shortcuts import redirect
 from .forms import FileForm
 # Create your views here.
 def index(request):
@@ -9,7 +10,6 @@ def text(request):
     params = {
         'post_msg': None,
     }
-    #テキスト(POST)
     if request.method=='POST':
         params['post_msg'] = request.POST['post_text']
 
@@ -25,7 +25,7 @@ def jstext(request):
     return render(request, 'main/jstext.html', params)
 
 def files(request):
-    params= {
+    params = {
         'form': FileForm(),
         'file_obj': None,
     }
@@ -35,3 +35,19 @@ def files(request):
         params['file_obj'] = file_obj
 
     return render(request, 'main/files.html', params)
+
+
+def put(request):
+    params = {
+        'put_text': None
+    }
+    if request.method=='PUT':
+        data = dict(QueryDict(request.body))
+        for key in data:
+            params['put_text'] = key
+    
+    print(params)
+    return render(request, 'main/put.html', params)
+
+def zero(request):
+    return render(request, 'main/zero.html')

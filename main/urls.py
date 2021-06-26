@@ -6,4 +6,6 @@ urlpatterns = [
     path('/text', views.text, name='text'),
     path('/jstext', views.jstext, name='jstext'),
     path('/files', views.files, name='files'),
+    path('/put', views.put, name='put'),
+    path('/zero', views.zero, name='zero'),
 ]
