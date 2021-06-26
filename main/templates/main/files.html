@@ -5,16 +5,16 @@
     <title>POSTリクエストのテスト</title>
 </head>
 <body>
-    <p>テキストをPOSTで送信</p>
-    <form action="{% url 'text' %}" method="post">
+    <p>ファイルをPOSTで送信</p>
+    <form action="{% url 'files' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="text" name="post_text">
-        <input type="submit" value="POSTテキスト">
+        {{ form.as_p }}
+        <input type="submit" value="送信">
     </form>
     <table border="1">
         <tr>
             <td>POST送信されたメッセージ</td>
-            <td>{{post_msg|safe}}</td>
+            <td>{{file_obj|safe}}</td>
         </tr>
     </table>
     <a href="{% url 'index' %}">戻る</a>

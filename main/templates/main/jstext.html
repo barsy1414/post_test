@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>POSTリクエストのテスト</title>
+</head>
+<body>
+</body>
+<script>
+    window.addEventListener('load', init);
+    
+    //初期化
+    function init() {
+        createForm();
+        createTable();
+        createAnchor();  
+    }
+
+    //formを動的に生成
+    function createForm(){
+        var form = document.createElement('form');
+        var inputText = document.createElement('input');
+        var button = document.createElement('button');
+        var csrf = document.createElement('input');
+
+        form.method = 'POST';
+        form.action = "{% url 'jstext' %}";
+        form.id = 'form';
+    
+        inputText.type = 'text';
+        inputText.name = 'js_text';
+
+        button.type = 'button';
+        button.id = 'btn';
+        button.innerHTML = 'JavaScriptでPOST送信';
+
+        csrf.type = 'hidden';
+        csrf.name = 'csrfmiddlewaretoken';
+        csrf.value = '{{ csrf_token }}';
+
+        form.appendChild(csrf);
+        form.appendChild(inputText);
+        form.appendChild(button);
+        document.body.appendChild(form);
+
+        //イベントを作成
+        createEvent(form);
+    }
+
+    //Tableを動的に生成
+    function createTable(){
+        var table = document.createElement('table');
+        var tr = document.createElement('tr');
+        var td1 = document.createElement('td');
+        var td2 = document.createElement('td');
+
+        td1.innerHTML = 'POST送信されたメッセージ';
+        td2.innerHTML = '{{ js_text | safe }}';
+
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        table.appendChild(tr);
+        document.body.appendChild(table)
+    }
+
+    //Anchorを動的に生成
+    function createAnchor(){
+        var anchor = document.createElement('a');
+        anchor.href = "{% url 'index' %}";
+        anchor.innerHTML = '戻る';
+        document.body.appendChild(anchor);
+    }
+
+    //イベント作成
+    function createEvent(form){
+        const btn = document.querySelector('button');
+        btn.addEventListener('click', function(){
+            form.submit();
+        })
+    }
+</script>
+</html>
